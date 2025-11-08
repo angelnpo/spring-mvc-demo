@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    lang="es"
+>
+    <head th:replace="layout/layout :: head"></head>
+
+    <body>
+        <header th:replace="layout/layout :: header"></header>
+
+        <div class="container py-4">
+            <h1>List of Products</h1>
+
+            <div class="py-4">
+                <a
+                    th:href="@{/product/register}"
+                    class="btn btn-primary back-link px-4 py-2 fw-bold"
+                    >Create</a
+                >
+            </div>
+        </div>
+    </body>
+</html>

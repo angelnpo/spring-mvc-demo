@@ -1,0 +1,1 @@
+CREATE SCHEMA IF NOT EXISTS spring_mvc_demo;

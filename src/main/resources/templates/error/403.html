@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!-- CLAVE: Incluir el namespace de seguridad para usar #authentication -->
+<html
+    lang="es"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Error 404 - Página No Encontrada</title>
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+
+        <style>
+            body.error-page {
+                font-family: 'Inter', sans-serif;
+                background: linear-gradient(135deg, #f0f4f8, #e0e7ee);
+                color: #333;
+            }
+
+            .error-card {
+                border-radius: 20px;
+                border: 1px solid #ddd;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                max-width: 520px;
+            }
+
+            .error-code {
+                font-size: 7rem;
+                font-weight: 900;
+                color: #ffc107;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .back-link {
+                transition: background-color 0.3s, transform 0.1s;
+                box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            }
+
+            .back-link:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+        </style>
+    </head>
+    <body
+        class="error-page d-flex align-items-center justify-content-center min-vh-100 text-center"
+    >
+        <main class="container py-5">
+            <div class="mx-auto bg-white p-5 error-card">
+                <p class="text-danger error-code mb-2">403</p>
+                <h2 class="text-danger error-title h2 text-primary mb-4">
+                    Access denied
+                </h2>
+
+                <p
+                    class="auth-greeting fs-5 text-secondary mb-3"
+                    sec:authorize="isAuthenticated()"
+                >
+                    Hello,
+                    <span
+                        class="fw-semibold"
+                        th:text="${#authentication.name}"
+                    ></span>
+                    !
+                </p>
+
+                <p class="error-message text-muted mb-4">
+                    Sorry, you don't have permissions to access this resource.
+                </p>
+
+                <a
+                    th:href="@{/home}"
+                    class="btn btn-primary back-link px-4 py-2 fw-bold"
+                    >Home</a
+                >
+            </div>
+        </main>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
