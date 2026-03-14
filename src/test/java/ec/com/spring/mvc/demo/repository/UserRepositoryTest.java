@@ -21,74 +21,73 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Angel Cuenca
  */
 @DataJpaTest
-//@ActiveProfiles("test")
 @Import(TestConfig.class)
 class UserRepositoryTest {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    /**
-     * Test save and find by id.
-     */
-    @Test
-    void testSaveAndFindById() {
-        UserEntity user = UserEntity.builder().username("testuser").email("test@example.com")
-            .password("encodedpassword").role(Role.USER).build();
+	/**
+	 * Test save and find by id.
+	 */
+	@Test
+	void testSaveAndFindById() {
+		UserEntity user = UserEntity.builder().username("testuser").email("test@example.com")
+				.password("encodedpassword").role(Role.USER).build();
 
-        UserEntity saved = this.userRepository.save(user);
-        assertNotNull(saved.getId());
+		UserEntity saved = this.userRepository.save(user);
+		assertNotNull(saved.getId());
 
-        Optional<UserEntity> found = this.userRepository.findById(saved.getId());
-        assertTrue(found.isPresent());
-        assertEquals("testuser", found.get().getUsername());
-    }
+		Optional<UserEntity> found = this.userRepository.findById(saved.getId());
+		assertTrue(found.isPresent());
+		assertEquals("testuser", found.get().getUsername());
+	}
 
-    /**
-     * Test find by username.
-     */
-    @Test
-    void testFindByUsername() {
-        UserEntity user = UserEntity.builder().username("testuser").email("test@example.com")
-            .password("encodedpassword").role(Role.USER).build();
+	/**
+	 * Test find by username.
+	 */
+	@Test
+	void testFindByUsername() {
+		UserEntity user = UserEntity.builder().username("testuser").email("test@example.com")
+				.password("encodedpassword").role(Role.USER).build();
 
-        this.userRepository.save(user);
+		this.userRepository.save(user);
 
-        Optional<UserEntity> found = this.userRepository.findByUsername("testuser");
-        assertTrue(found.isPresent());
-        assertEquals("testuser", found.get().getUsername());
-    }
+		Optional<UserEntity> found = this.userRepository.findByUsername("testuser");
+		assertTrue(found.isPresent());
+		assertEquals("testuser", found.get().getUsername());
+	}
 
-    /**
-     * Test find by email.
-     */
-    @Test
-    void testFindByEmail() {
-        UserEntity user = UserEntity.builder().username("testuser").email("test@example.com")
-            .password("encodedpassword").role(Role.USER).build();
+	/**
+	 * Test find by email.
+	 */
+	@Test
+	void testFindByEmail() {
+		UserEntity user = UserEntity.builder().username("testuser").email("test@example.com")
+				.password("encodedpassword").role(Role.USER).build();
 
-        this.userRepository.save(user);
+		this.userRepository.save(user);
 
-        Optional<UserEntity> found = this.userRepository.findByEmail("test@example.com");
-        assertTrue(found.isPresent());
-        assertEquals("test@example.com", found.get().getEmail());
-    }
+		Optional<UserEntity> found = this.userRepository.findByEmail("test@example.com");
+		assertTrue(found.isPresent());
+		assertEquals("test@example.com", found.get().getEmail());
+	}
 
-    /**
-     * Test find by username not found.
-     */
-    @Test
-    void testFindByUsername_NotFound() {
-        Optional<UserEntity> found = this.userRepository.findByUsername("nonexistent");
-        assertFalse(found.isPresent());
-    }
+	/**
+	 * Test find by username not found.
+	 */
+	@Test
+	void testFindByUsername_NotFound() {
+		Optional<UserEntity> found = this.userRepository.findByUsername("nonexistent");
+		assertFalse(found.isPresent());
+	}
 
-    /**
-     * Test find by email not found.
-     */
-    @Test
-    void testFindByEmail_NotFound() {
-        Optional<UserEntity> found = this.userRepository.findByEmail("nonexistent@example.com");
-        assertFalse(found.isPresent());
-    }
+	/**
+	 * Test find by email not found.
+	 */
+	@Test
+	void testFindByEmail_NotFound() {
+		Optional<UserEntity> found = this.userRepository.findByEmail("nonexistent@example.com");
+		assertFalse(found.isPresent());
+	}
 }

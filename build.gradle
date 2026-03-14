@@ -51,7 +51,6 @@ tasks.named('test') {
 bootRun {
     if ( "commandLine" == project.findProperty('mode') as String ) {
         environment("SERVER_PORT", "8080")
-        //environment("SPRING_PROFILES_ACTIVE", "PRUEBAS")
 
         if ( 1 == project.findProperty('debug') as Integer ) {
             jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787"]
