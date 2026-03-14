@@ -20,49 +20,50 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 class UserServiceTest {
 
-    @Autowired
-    private UserService userService;
+  @Autowired
+  private UserService userService;
 
-    /**
-     * Test register null userDTO.
-     */
-    @Test
-    void testRegister_NullUserDTO_ThrowsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> this.userService.register(null));
-    }
+  /**
+   * Test register null userDTO.
+   */
+  @Test
+  void testRegister_NullUserDTO_ThrowsIllegalArgumentException() {
+    assertThrows(IllegalArgumentException.class, () -> this.userService.register(null));
+  }
 
-    /**
-     * Test register user already exists.
-     */
-    @Test
-    void testRegister_UserAlreadyExists_ThrowsRuntimeException() {
-        UserDTO userDTO1 =
-            UserDTO.builder().username("testuser").email("test@example.com").password("password123")
-                .passwordConfirm("password123").role(Role.USER).build();
+  /**
+   * Test register user already exists.
+   */
+  @Test
+  void testRegister_UserAlreadyExists_ThrowsRuntimeException() {
+    UserDTO userDTO1 =
+        UserDTO.builder().username("testuser").email("test@example.com").password("password123")
+            .role(Role.USER).build();
 
-        userService.register(userDTO1);
+    userService.register(userDTO1);
 
-        UserDTO userDTO2 = UserDTO.builder().username("testuser2").email("test@example.com")
-            .password("password123").passwordConfirm("password123").role(Role.USER).build();
+    UserDTO userDTO2 =
+        UserDTO.builder().username("testuser2").email("test@example.com").password("password123")
+            .role(Role.USER).build();
 
-        assertThrows(RuntimeException.class, () -> this.userService.register(userDTO2));
-    }
+    assertThrows(RuntimeException.class, () -> this.userService.register(userDTO2));
+  }
 
-    /**
-     * Test register successful registration.
-     */
-    @Test
-    void testRegister_SuccessfulRegistration_ReturnsUserEntity() {
-        UserDTO userDTO = UserDTO.builder().username("testuser").firstName("Test").lastName("User")
-            .email("test@example.com").password("password123").passwordConfirm("password123")
-            .country("Ecuador").role(Role.USER).build();
+  /**
+   * Test register successful registration.
+   */
+  @Test
+  void testRegister_SuccessfulRegistration_ReturnsUserEntity() {
+    UserDTO userDTO = UserDTO.builder().username("testuser").firstName("Test").lastName("User")
+        .email("test@example.com").password("password123").country("Ecuador").role(Role.USER)
+        .build();
 
-        var result = this.userService.register(userDTO);
+    var result = this.userService.register(userDTO);
 
-        assertNotNull(result);
-        assertEquals("testuser", result.getUsername());
-        assertEquals("test@example.com", result.getEmail());
-        assertEquals(Role.USER, result.getRole());
-        assertNotNull(result.getPassword()); // encoded
-    }
+    assertNotNull(result);
+    assertEquals("testuser", result.getUsername());
+    assertEquals("test@example.com", result.getEmail());
+    assertEquals(Role.USER, result.getRole());
+    assertNotNull(result.getPassword()); // encoded
+  }
 }

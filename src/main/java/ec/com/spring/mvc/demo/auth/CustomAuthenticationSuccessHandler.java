@@ -25,6 +25,7 @@ public class CustomAuthenticationSuccessHandler
      */
     public CustomAuthenticationSuccessHandler() {
         this.setDefaultTargetUrl("/home");
+        this.setAlwaysUseDefaultTargetUrl(true);
     }
 
     /**

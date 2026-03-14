@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,7 +13,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.io.IOException;
 
@@ -23,64 +24,65 @@ import java.io.IOException;
  */
 public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final SecurityContextRepository securityContextRepository;
+	private final SecurityContextRepository securityContextRepository;
 
-    /**
-     * Constructor.
-     *
-     * @param authManager
-     * @param securityContextRepository
-     */
-    public EmailPasswordAuthFilter(AuthenticationManager authManager,
-        SecurityContextRepository securityContextRepository) {
+	/**
+	 * Constructor.
+	 *
+	 * @param authManager
+	 * @param securityContextRepository
+	 */
+	public EmailPasswordAuthFilter(AuthenticationManager authManager,
+			SecurityContextRepository securityContextRepository) {
 
-        this.setAuthenticationManager(authManager);
-        this.securityContextRepository = securityContextRepository;
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
-    }
+		this.setAuthenticationManager(authManager);
+		this.securityContextRepository = securityContextRepository;
+		this.setRequiresAuthenticationRequestMatcher(
+				PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/login"));
+	}
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-        HttpServletResponse response) throws AuthenticationException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException {
 
-        String email = request.getParameter("email");
-        String password = obtainPassword(request);
+		String email = request.getParameter("email");
+		String password = obtainPassword(request);
 
-        email = (email != null) ? email.trim() : "";
-        password = (password != null) ? password : "";
+		email = (email != null) ? email.trim() : "";
+		password = (password != null) ? password : "";
 
-        UsernamePasswordAuthenticationToken authRequest =
-            new UsernamePasswordAuthenticationToken(email, password);
-        this.setDetails(request, authRequest);
-        return this.getAuthenticationManager().authenticate(authRequest);
-    }
+		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(email, password);
+		this.setDetails(request, authRequest);
+		return this.getAuthenticationManager().authenticate(authRequest);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-        HttpServletResponse response, FilterChain chain, Authentication authResult)
-        throws IOException, ServletException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authResult) throws IOException, ServletException {
 
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authResult);
-        SecurityContextHolder.setContext(context);
-        securityContextRepository.saveContext(context, request, response);
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
+		context.setAuthentication(authResult);
+		SecurityContextHolder.setContext(context);
+		securityContextRepository.saveContext(context, request, response);
 
-        // Delegate to success handler
-        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
-    }
+		// Delegate to success handler
+		this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request,
-        HttpServletResponse response, AuthenticationException failed)
-        throws IOException, ServletException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
 
-        // Delegate to failure handler
-        this.getFailureHandler().onAuthenticationFailure(request, response, failed);
-    }
+		// Delegate to failure handler
+		this.getFailureHandler().onAuthenticationFailure(request, response, failed);
+	}
 }

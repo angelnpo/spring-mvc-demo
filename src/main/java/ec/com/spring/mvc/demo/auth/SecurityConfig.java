@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,7 +52,7 @@ public class SecurityConfig {
 
         // @formatter:off
         return http
-            .csrf(csrf -> csrf.disable())
+            .csrf(AbstractHttpConfigurer::disable)
             .securityContext(context ->
                     context.securityContextRepository(securityContextRepository))
             .authenticationProvider(authenticationProvider())
@@ -61,7 +62,7 @@ public class SecurityConfig {
                             .anyRequest().authenticated()
             )
             .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
-            .formLogin(form -> form.disable())
+            .formLogin(AbstractHttpConfigurer::disable)
             .logout(logout ->
                     logout.logoutUrl("/logout")
                             .logoutSuccessUrl("/login?logout")

@@ -27,34 +27,36 @@ import java.util.List;
  * @author Angel Cuenca
  */
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "email"})})
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username", "email" }) })
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	private static final long serialVersionUID = 1L;
 
-    @Column(nullable = false)
-    private String username;
-    private String firstName;
-    private String lastName;
-    @Column(unique = true, nullable = false)
-    private String email;
-    private String password;
-    private String country;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.name()));
-    }
+	@Column(nullable = false)
+	private String username;
+	private String firstName;
+	private String lastName;
+	@Column(unique = true, nullable = false)
+	private String email;
+	private String password;
+	private String country;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-    //    @Override
-    //    public String getUsername() {
-    //        return this.email;
-    //    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(this.role.name()));
+	}
+
+	// @Override
+	// public String getUsername() {
+	// return this.email;
+	// }
 }
